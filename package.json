@@ -6,9 +6,9 @@
   "scripts": {
     "start": "electron .",
     "build": "npm run generate-icons && electron-builder",
-    "build:mac": "npm run generate-icons && electron-builder --mac",
-    "build:win": "npm run generate-icons && electron-builder --win",
-    "build:linux": "npm run generate-icons && electron-builder --linux",
+    "build:mac": "npm run build -- --mac",
+    "build:win": "npm run build -- --win",
+    "build:linux": "npm run build -- --linux",
     "generate-icons": "node scripts/generate-icons.js"
   },
   "author": "pwSathira",
@@ -28,7 +28,6 @@
   "build": {
     "appId": "com.pwsathira.ankiaudioextractor",
     "productName": "Anki Audio Extractor",
-    "artifactName": "${productName}-${version}-${arch}.${ext}",
     "mac": {
       "category": "public.app-category.utilities",
       "target": ["dmg", "zip"],
@@ -36,8 +35,7 @@
     },
     "win": {
       "target": ["nsis"],
-      "icon": "build/icon.ico",
-      "requestedExecutionLevel": "asInvoker"
+      "icon": "build/icon.ico"
     },
     "linux": {
       "target": ["AppImage", "deb"],
@@ -49,26 +47,16 @@
     },
     "publish": {
       "provider": "github",
-      "releaseType": "release",
-      "publishAutoUpdate": true
+      "releaseType": "release"
     },
     "files": [
       "node_modules/**/*",
-      {
-        "from": "src",
-        "to": ".",
-        "filter": "**/*"
-      }
+      "src/**/*"
     ],
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "perMachine": false,
-      "deleteAppDataOnUninstall": false,
-      "artifactName": "${productName}-Setup-${version}.${ext}"
-    },
-    "asar": true,
-    "compression": "normal"
+      "createDesktopShortcut": true
+    }
   }
 }

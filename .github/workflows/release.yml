@@ -13,36 +13,29 @@ concurrency:
 jobs:
   release:
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 30
-
     strategy:
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
 
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Install Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "18"
           cache: "npm"
 
-      - name: Install dependencies
-        run: npm ci
+      - run: npm ci
 
-      - name: Build/Release Electron app
-        uses: samuelmeuli/action-electron-builder@v1
+      - uses: samuelmeuli/action-electron-builder@v1
         with:
           github_token: ${{ secrets.RELEASE_TOKEN }}
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
         env:
-          GH_TOKEN: ${{ secrets.RELEASE_TOKEN }} # electron-builder uses this
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           NODE_OPTIONS: "--max-old-space-size=4096"
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ runner.os }}-build
           path: dist/
