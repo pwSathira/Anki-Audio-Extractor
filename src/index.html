@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Anki Audio Extractor</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .drop-zone {
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+            cursor: pointer;
+        }
+        .drop-zone:hover {
+            border-color: #666;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        button:hover:not(:disabled) {
+            background-color: #45a049;
+        }
+        #status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+        .input-group {
+            margin: 20px 0;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .input-group .controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        #outputDir {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        #startButton {
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Anki Audio Extractor</h1>
+        <div class="drop-zone" id="dropZone">
+            <p>Drag and drop your Anki .apkg file here</p>
+            <p>or</p>
+            <button id="selectFile">Select File</button>
+        </div>
+        <div class="input-group">
+            <label for="outputDir">Output Directory:</label>
+            <div class="controls">
+                <input type="text" id="outputDir" placeholder="Select output directory" readonly>
+                <button id="createNewFolder">Browse</button>
+            </div>
+        </div>
+        <button id="startButton" disabled>Start Extraction</button>
+        <div id="status"></div>
+    </div>
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const selectFile = document.getElementById('selectFile');
+        const status = document.getElementById('status');
+        const outputDir = document.getElementById('outputDir');
+        const createNewFolder = document.getElementById('createNewFolder');
+        const startButton = document.getElementById('startButton');
+        let selectedFile = null;
+
+        function updateStartButton() {
+            startButton.disabled = !(selectedFile && outputDir.value);
+        }
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = '#4CAF50';
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.style.borderColor = '#ccc';
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = '#ccc';
+            const files = e.dataTransfer.files;
+            handleFileSelect(files);
+        });
+
+        selectFile.addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.apkg';
+            input.onchange = (e) => handleFileSelect(e.target.files);
+            input.click();
+        });
+
+        createNewFolder.addEventListener('click', async () => {
+            try {
+                const result = await window.electron.createDirectory();
+                if (result) {
+                    outputDir.value = result;
+                    updateStartButton();
+                }
+            } catch (error) {
+                status.textContent = `Error creating directory: ${error.message}`;
+                status.className = 'error';
+            }
+        });
+
+        function handleFileSelect(files) {
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.name.endsWith('.apkg')) {
+                    selectedFile = file;
+                    status.textContent = `Selected file: ${file.name}`;
+                    status.className = '';
+                    updateStartButton();
+                } else {
+                    status.textContent = 'Please select an .apkg file';
+                    status.className = 'error';
+                }
+            }
+        }
+
+        startButton.addEventListener('click', async () => {
+            if (!selectedFile || !outputDir.value) return;
+
+            try {
+                status.textContent = `Processing ${selectedFile.name}...`;
+                status.className = '';
+
+                const response = await fetch('http://localhost:4567/api/extract', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        apkgPath: selectedFile.path,
+                        outputDir: outputDir.value
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    status.textContent = `Successfully extracted ${result.extractedFiles.length} audio files!`;
+                    status.className = 'success';
+                } else {
+                    status.textContent = `Error: ${result.error}`;
+                    status.className = 'error';
+                }
+            } catch (error) {
+                status.textContent = `Error: ${error.message}`;
+                status.className = 'error';
+            }
+        });
+    </script>
+</body>
+</html> 
