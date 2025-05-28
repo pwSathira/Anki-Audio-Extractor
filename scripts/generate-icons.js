@@ -1,6 +1,7 @@
 const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
+const pngToIco = require('png-to-ico');
 
 const ICON_SIZES = {
     mac: [16, 32, 64, 128, 256, 512, 1024],
@@ -75,19 +76,20 @@ async function generateIcons() {
 
     // Save Windows icons as PNG files
     console.log('Saving Windows icons...');
-    await Promise.all(
-        ICON_SIZES.windows.map((size, i) =>
-            fs.promises.writeFile(
-                path.join(buildDir, `icon-${size}.png`),
-                windowsIcons[i]
-            )
-        )
+    const windowsIconPaths = await Promise.all(
+        ICON_SIZES.windows.map((size, i) => {
+            const iconPath = path.join(buildDir, `icon-${size}.png`);
+            return fs.promises.writeFile(iconPath, windowsIcons[i])
+                .then(() => iconPath);
+        })
     );
 
-    // Save the largest PNG as the main Windows icon
+    // Generate ICO file from Windows PNGs
+    console.log('Generating Windows ICO file...');
+    const icoBuffer = await pngToIco(windowsIconPaths);
     await fs.promises.writeFile(
         path.join(buildDir, 'icon.ico'),
-        windowsIcons[windowsIcons.length - 1]
+        icoBuffer
     );
 
     console.log('Icon generation complete!');
