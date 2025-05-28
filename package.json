@@ -1,8 +1,8 @@
 {
   "name": "anki-audio-extractor",
   "version": "1.0.7",
-  "description": "Anki Audio Extractor",
-  "main": "src/main.js",
+  "description": "Extract audio from Anki cards",
+  "main": "main.js",
   "scripts": {
     "start": "electron .",
     "build": "npm run generate-icons && electron-builder",
@@ -11,14 +11,11 @@
     "build:linux": "npm run generate-icons && electron-builder --linux",
     "generate-icons": "node scripts/generate-icons.js"
   },
-  "author": {
-    "name": "pwSathira",
-    "email": "sathira.williams@gmail.com"
-  },
-  "license": "ISC",
+  "author": "pwSathira",
+  "license": "MIT",
   "devDependencies": {
-    "electron": "^28.1.0",
-    "electron-builder": "^24.9.1",
+    "electron": "^28.3.3",
+    "electron-builder": "^24.13.3",
     "png-to-ico": "^2.1.8",
     "sharp": "^0.33.2"
   },
@@ -29,37 +26,33 @@
     "express": "^5.1.0"
   },
   "build": {
-    "appId": "com.ankiaudio.extractor",
+    "appId": "com.pwsathira.ankiaudioextractor",
     "productName": "Anki Audio Extractor",
-    "publish": {
-      "provider": "github",
-      "releaseType": "release"
-    },
     "mac": {
       "category": "public.app-category.utilities",
-      "target": [
-        "dmg",
-        "zip"
-      ],
-      "icon": "build/icon.icns",
-      "identity": null
+      "target": ["dmg", "zip"],
+      "icon": "build/icon.icns"
     },
     "win": {
-      "target": [
-        "nsis",
-        "portable"
-      ],
-      "icon": "build/icon.ico",
-      "artifactName": "${productName}-Setup-${version}.${ext}",
-      "requestedExecutionLevel": "asInvoker"
+      "target": ["nsis"],
+      "icon": "build/icon.ico"
     },
     "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ],
-      "category": "Utility",
-      "icon": "build/icon.png"
+      "target": ["AppImage", "deb"],
+      "icon": "build/icon.png",
+      "category": "Utility"
+    },
+    "directories": {
+      "output": "dist"
+    },
+    "publish": {
+      "provider": "github",
+      "releaseType": "release",
+      "publishAutoUpdate": true,
+      "allowToChangeInstallationDirectory": true,
+      "requestedExecutionLevel": "asInvoker",
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
+      "overwrite": true
     },
     "files": [
       "src/**/*",
