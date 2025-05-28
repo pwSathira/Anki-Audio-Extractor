@@ -5,6 +5,11 @@ on:
     tags:
       - 'v*'
 
+# Prevent multiple workflows from running at the same time
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   release:
     runs-on: ${{ matrix.os }}
