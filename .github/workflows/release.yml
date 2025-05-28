@@ -8,6 +8,7 @@ on:
 jobs:
   release:
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
 
     strategy:
       matrix:
@@ -33,6 +34,7 @@ jobs:
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
