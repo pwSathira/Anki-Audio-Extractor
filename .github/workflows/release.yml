@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 # Prevent multiple workflows from running at the same time
 concurrency:
@@ -26,8 +26,8 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: "18"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -38,11 +38,11 @@ jobs:
           github_token: ${{ secrets.RELEASE_TOKEN }}
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
         env:
-          GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN }} # electron-builder uses this
           NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ${{ runner.os }}-build
-          path: dist/ 
+          path: dist/

@@ -28,6 +28,7 @@
   "build": {
     "appId": "com.pwsathira.ankiaudioextractor",
     "productName": "Anki Audio Extractor",
+    "artifactName": "${productName}-${version}-${arch}.${ext}",
     "mac": {
       "category": "public.app-category.utilities",
       "target": ["dmg", "zip"],
@@ -35,7 +36,8 @@
     },
     "win": {
       "target": ["nsis"],
-      "icon": "build/icon.ico"
+      "icon": "build/icon.ico",
+      "requestedExecutionLevel": "asInvoker"
     },
     "linux": {
       "target": ["AppImage", "deb"],
@@ -49,9 +51,6 @@
       "provider": "github",
       "releaseType": "release",
       "publishAutoUpdate": true,
-      "allowToChangeInstallationDirectory": true,
-      "requestedExecutionLevel": "asInvoker",
-      "artifactName": "${productName}-${version}-${arch}.${ext}",
       "overwrite": true
     },
     "files": [
