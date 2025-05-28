@@ -11,7 +11,10 @@
     "build:linux": "npm run generate-icons && electron-builder --linux",
     "generate-icons": "node scripts/generate-icons.js"
   },
-  "author": "",
+  "author": {
+    "name": "pwSathira",
+    "email": "sathira.williams@gmail.com"
+  },
   "license": "ISC",
   "devDependencies": {
     "electron": "^28.1.0",
