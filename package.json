@@ -2,7 +2,7 @@
   "name": "anki-audio-extractor",
   "version": "1.0.8",
   "description": "Extract audio from Anki cards",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
     "start": "electron .",
     "build": "npm run generate-icons && electron-builder",
@@ -53,8 +53,12 @@
       "publishAutoUpdate": true
     },
     "files": [
-      "src/**/*",
-      "node_modules/**/*"
+      "node_modules/**/*",
+      {
+        "from": "src",
+        "to": ".",
+        "filter": "**/*"
+      }
     ],
     "nsis": {
       "oneClick": false,
