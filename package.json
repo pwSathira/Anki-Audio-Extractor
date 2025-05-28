@@ -11,7 +11,10 @@
     "build:linux": "npm run build -- --linux",
     "generate-icons": "node scripts/generate-icons.js"
   },
-  "author": "pwSathira",
+  "author": {
+    "name": "Sathira Williams",
+    "email": "sathira.williams@gmail.com"
+  },
   "license": "MIT",
   "devDependencies": {
     "electron": "^28.3.3",
