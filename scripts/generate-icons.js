@@ -73,10 +73,14 @@ async function generateIcons() {
         macIcons[macIcons.length - 1]
     );
 
-    // Save the largest PNG as the main Windows icon
+    // Generate and save Windows ICO file
+    console.log('Saving Windows icon...');
+    const icoBuffer = await sharp(windowsIcons[windowsIcons.length - 1])
+        .toFormat('ico')
+        .toBuffer();
     await fs.promises.writeFile(
         path.join(buildDir, 'icon.ico'),
-        windowsIcons[windowsIcons.length - 1]
+        icoBuffer
     );
 
     console.log('Icon generation complete!');
