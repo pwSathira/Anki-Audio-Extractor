@@ -1,6 +1,6 @@
 {
   "name": "anki-audio-extractor",
-  "version": "1.1.1 ",
+  "version": "1.1.2 ",
   "description": "Extract audio from Anki cards",
   "main": "src/main.js",
   "scripts": {
