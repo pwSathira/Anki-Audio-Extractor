@@ -14,11 +14,18 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: true,
-            preload: path.join(__dirname, 'preload.js')
+            preload: path.join(__dirname, 'preload.js'),
+            sandbox: false
         }
     });
 
-    mainWindow.loadFile('src/index.html');
+    // Load the index.html file
+    mainWindow.loadFile(path.join(__dirname, 'index.html'));
+
+    // Open DevTools in development
+    if (process.env.NODE_ENV === 'development') {
+        mainWindow.webContents.openDevTools();
+    }
 }
 
 async function startServer() {
@@ -29,6 +36,9 @@ async function startServer() {
     expressApp.post('/api/extract', async (req, res) => {
         try {
             const { apkgPath, outputDir } = req.body;
+            if (!apkgPath || !outputDir) {
+                throw new Error('Missing required parameters');
+            }
             const extractedFiles = await ankiPackageService.extractAudioFiles(apkgPath, outputDir);
             res.json({ success: true, extractedFiles });
         } catch (error) {
@@ -67,6 +77,20 @@ app.on('before-quit', () => {
 ipcMain.handle('create-directory', async () => {
     const result = await dialog.showOpenDialog(mainWindow, {
         properties: ['openDirectory', 'createDirectory']
+    });
+    
+    if (!result.canceled && result.filePaths.length > 0) {
+        return result.filePaths[0];
+    }
+    return null;
+});
+
+ipcMain.handle('select-file', async () => {
+    const result = await dialog.showOpenDialog(mainWindow, {
+        properties: ['openFile'],
+        filters: [
+            { name: 'Anki Package', extensions: ['apkg'] }
+        ]
     });
     
     if (!result.canceled && result.filePaths.length > 0) {

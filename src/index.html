@@ -117,6 +117,15 @@
         const startButton = document.getElementById('startButton');
         let selectedFile = null;
 
+        // Check if electron API is available
+        if (!window.electron) {
+            status.textContent = 'Error: Electron API not available';
+            status.className = 'error';
+            selectFile.disabled = true;
+            createNewFolder.disabled = true;
+            startButton.disabled = true;
+        }
+
         function updateStartButton() {
             startButton.disabled = !(selectedFile && outputDir.value);
         }
@@ -130,19 +139,36 @@
             dropZone.style.borderColor = '#ccc';
         });
 
-        dropZone.addEventListener('drop', (e) => {
+        dropZone.addEventListener('drop', async (e) => {
             e.preventDefault();
             dropZone.style.borderColor = '#ccc';
-            const files = e.dataTransfer.files;
-            handleFileSelect(files);
+            try {
+                const filePath = await window.electron.selectFile();
+                if (filePath) {
+                    selectedFile = { path: filePath, name: window.electron.basename(filePath) };
+                    status.textContent = `Selected file: ${selectedFile.name}`;
+                    status.className = '';
+                    updateStartButton();
+                }
+            } catch (error) {
+                status.textContent = `Error selecting file: ${error.message}`;
+                status.className = 'error';
+            }
         });
 
-        selectFile.addEventListener('click', () => {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.apkg';
-            input.onchange = (e) => handleFileSelect(e.target.files);
-            input.click();
+        selectFile.addEventListener('click', async () => {
+            try {
+                const filePath = await window.electron.selectFile();
+                if (filePath) {
+                    selectedFile = { path: filePath, name: window.electron.basename(filePath) };
+                    status.textContent = `Selected file: ${selectedFile.name}`;
+                    status.className = '';
+                    updateStartButton();
+                }
+            } catch (error) {
+                status.textContent = `Error selecting file: ${error.message}`;
+                status.className = 'error';
+            }
         });
 
         createNewFolder.addEventListener('click', async () => {
@@ -157,21 +183,6 @@
                 status.className = 'error';
             }
         });
-
-        function handleFileSelect(files) {
-            if (files.length > 0) {
-                const file = files[0];
-                if (file.name.endsWith('.apkg')) {
-                    selectedFile = file;
-                    status.textContent = `Selected file: ${file.name}`;
-                    status.className = '';
-                    updateStartButton();
-                } else {
-                    status.textContent = 'Please select an .apkg file';
-                    status.className = 'error';
-                }
-            }
-        }
 
         startButton.addEventListener('click', async () => {
             if (!selectedFile || !outputDir.value) return;
