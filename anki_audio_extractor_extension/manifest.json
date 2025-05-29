@@ -1,0 +1,13 @@
+{
+    "package": "anki_audio_extractor",
+    "name": "Anki Audio Extractor",
+    "mod": 1680000000,
+    "conflicts": [],
+    "min_point_version": 45,
+    "max_point_version": 0,
+    "branch_index": 0,
+    "human_version": "1.0.0",
+    "homepage": "https://github.com/pwSathira/Anki-Audio-Extractor",
+    "author": "Sathira Williams",
+    "description": "Extract audio files from Anki packages (.apkg files) to your Anki media folder."
+} 
