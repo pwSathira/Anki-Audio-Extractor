@@ -10,7 +10,7 @@ permissions:
   packages: write
 
 jobs:
-  release:
+  build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -31,7 +31,7 @@ jobs:
 
       - name: Get version
         id: get_version
-        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+        run: echo "version=$(node -p \"require('./package.json').version\")" >> $GITHUB_OUTPUT
 
       - name: Build app
         run: npm run package
@@ -39,15 +39,35 @@ jobs:
           GH_TOKEN: ${{ secrets.github_token }}
           CSC_IDENTITY_AUTO_DISCOVERY: false
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}-artifacts
+          path: |
+            dist/**/*.dmg
+            dist/**/*.zip
+            dist/**/*.msi
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: Get version
+        id: get_version
+        run: echo "version=$(node -p \"require('./package.json').version\")" >> $GITHUB_OUTPUT
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ steps.get_version.outputs.version }}
           name: Release v${{ steps.get_version.outputs.version }}
-          files: |
-            ${{ matrix.os == 'macos-latest' && 'dist/**/*.dmg' || '' }}
-            ${{ matrix.os == 'macos-latest' && 'dist/**/*.zip' || '' }}
-            ${{ matrix.os == 'windows-latest' && 'dist/**/*.msi' || '' }}
-            ${{ matrix.os == 'windows-latest' && 'dist/**/*.zip' || '' }}
+          files: ./artifacts/**/*.dmg
+            ./artifacts/**/*.zip
+            ./artifacts/**/*.msi
         env:
           GITHUB_TOKEN: ${{ secrets.github_token }} 
