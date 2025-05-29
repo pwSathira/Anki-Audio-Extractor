@@ -53,6 +53,9 @@ jobs:
         with:
           path: ./artifacts
 
+      - name: List all files in artifacts
+        run: find ./artifacts
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
