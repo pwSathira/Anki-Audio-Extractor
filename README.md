@@ -38,4 +38,4 @@ This will create a distributable package in the `dist` directory.
 
 ## License
 
-ISC 
+MIT License
