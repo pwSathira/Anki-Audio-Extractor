@@ -1,6 +1,6 @@
 {
   "name": "anki-audio-extractor",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "Extract audio from Anki cards",
   "main": "src/main.js",
   "engines": {
@@ -57,6 +57,20 @@
           "platforms": [
             "darwin"
           ]
+        }
+      ],
+      "publishers": [
+        {
+          "name": "@electron-forge/publisher-github",
+          "config": {
+            "repository": {
+              "owner": "pwSathira",
+              "name": "Anki-Audio-Extractor"
+            },
+            "draft": false,
+            "prerelease": false,
+            "authToken": "GITHUB_TOKEN"
+          }
         }
       ]
     }
