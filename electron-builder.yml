@@ -12,6 +12,7 @@ publish:
   repo: Anki-Audio-Extractor
   private: true
   vPrefixedTagName: true
+  overwrite: true
 mac:
   category: public.app-category.utilities
   target: 
