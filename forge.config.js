@@ -9,11 +9,16 @@ module.exports = {
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
-      config: {},
+      config: {
+        name: 'anki_audio_extractor',
+        authors: 'Sathira Williams',
+        description: 'Extract audio from Anki cards',
+        noMsi: true
+      },
     },
     {
       name: '@electron-forge/maker-zip',
-      platforms: ['darwin'],
+      platforms: ['darwin', 'win32'],
     },
     {
       name: '@electron-forge/maker-deb',
@@ -49,7 +54,9 @@ module.exports = {
           owner: 'pwSathira',         
           name: 'Anki-Audio-Extractor',
         },
-        draft: true, 
+        draft: false,
+        prerelease: false,
+        authToken: process.env.GITHUB_TOKEN
       },
     },
   ],
