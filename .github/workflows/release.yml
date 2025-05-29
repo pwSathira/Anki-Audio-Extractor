@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   release:
     runs-on: ${{ matrix.os }}
@@ -41,8 +45,9 @@ jobs:
           tag_name: v${{ steps.get_version.outputs.version }}
           name: Release v${{ steps.get_version.outputs.version }}
           files: |
-            dist/*.dmg
-            dist/*.zip
-            dist/*.msi
+            ${{ matrix.os == 'macos-latest' && 'dist/**/*.dmg' || '' }}
+            ${{ matrix.os == 'macos-latest' && 'dist/**/*.zip' || '' }}
+            ${{ matrix.os == 'windows-latest' && 'dist/**/*.msi' || '' }}
+            ${{ matrix.os == 'windows-latest' && 'dist/**/*.zip' || '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.github_token }} 
