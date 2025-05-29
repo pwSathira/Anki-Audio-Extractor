@@ -58,16 +58,11 @@ jobs:
         with:
           path: ./artifacts
 
-      - name: Get version
-        id: get_version
-        shell: bash
-        run: echo "version=$(node -p \"require('./package.json').version\")" >> $GITHUB_OUTPUT
-
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{ steps.get_version.outputs.version }}
-          name: Release v${{ steps.get_version.outputs.version }}
+          tag_name: v1.2.4
+          name: Release v1.2.4
           files: ./artifacts/**/*.dmg
             ./artifacts/**/*.zip
             ./artifacts/**/*.msi
