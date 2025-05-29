@@ -1,17 +1,28 @@
 {
   "name": "anki-audio-extractor",
-  "version": "1.1.9",
+  "version": "1.2.0",
   "description": "Extract audio from Anki cards",
   "main": "src/main.js",
   "engines": {
     "node": ">=20.0.0"
   },
   "scripts": {
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "generate-icons": "node scripts/generate-icons.js"
+    "start": "electron .",
+    "generate-icons": "node scripts/generate-icons.js",
+    "package": "electron-builder"
+  },
+  "build": {
+    "appId": "com.sathira.anki-audio-extractor",
+    "productName": "Anki Audio Extractor",
+    "copyright": "Copyright © 2025 Sathira Williams",
+    "mac": {
+      "icon": "assets/icon.icns",
+      "target": ["zip", "dmg"]
+    },
+    "win": {
+      "icon": "assets/icon.ico",
+      "target": ["zip", "msi"]
+    }
   },
   "author": {
     "name": "Sathira Williams",
@@ -19,60 +30,14 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@electron-forge/cli": "^7.8.1",
-    "@electron-forge/maker-dmg": "^7.8.1",
-    "@electron-forge/maker-squirrel": "^7.8.1",
-    "@electron-forge/maker-zip": "^7.8.1",
-    "@electron-forge/plugin-auto-unpack-natives": "^7.8.1",
-    "@electron-forge/publisher-github": "^7.8.1",
     "electron": "^36.3.2",
+    "electron-builder": "^26.0.12",
     "png-to-ico": "^2.1.8",
     "sharp": "^0.34.2"
   },
   "dependencies": {
-    "adm-zip": "^0.5.16",
+    "adm-zip": "^0.5.16", 
     "cors": "^2.8.5",
     "express": "^5.1.0"
-  },
-  "config": {
-    "forge": {
-      "packagerConfig": {
-        "icon": "./assets/icon",
-        "asar": true,
-        "osxSign": false,
-        "osxNotarize": false
-      },
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "anki_audio_extractor",
-            "authors": "Sathira Williams",
-            "description": "Extract audio from Anki cards",
-            "noMsi": true
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        }
-      ],
-      "publishers": [
-        {
-          "name": "@electron-forge/publisher-github",
-          "config": {
-            "repository": {
-              "owner": "pwSathira",
-              "name": "Anki-Audio-Extractor"
-            },
-            "draft": false,
-            "prerelease": false,
-            "authToken": "GITHUB_TOKEN"
-          }
-        }
-      ]
-    }
   }
 }
