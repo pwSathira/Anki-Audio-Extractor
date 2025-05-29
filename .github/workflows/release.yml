@@ -61,7 +61,8 @@ jobs:
         with:
           tag_name: v1.2.4
           name: Release v1.2.4
-          files: ./artifacts/**/*.dmg
+          files: |
+            ./artifacts/**/*.dmg
             ./artifacts/**/*.zip
             ./artifacts/**/*.msi
         env:
