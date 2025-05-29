@@ -8,7 +8,10 @@ files:
 publish:
   provider: github
   releaseType: release
-  overwrite: true
+  owner: pwsathira
+  repo: Anki-Audio-Extractor
+  private: true
+  vPrefixedTagName: true
 mac:
   category: public.app-category.utilities
   target: 
