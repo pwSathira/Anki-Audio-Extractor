@@ -46,10 +46,10 @@ module.exports = {
       name: '@electron-forge/publisher-github',
       config: {
         repository: {
-          owner: 'pwSathira',         // <-- Replace with your GitHub username/org
-          name: 'Anki-Audio-Extractor', // <-- Replace with your repo name
+          owner: 'pwSathira',         
+          name: 'Anki-Audio-Extractor',
         },
-        draft: false, 
+        draft: true, 
       },
     },
   ],
