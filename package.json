@@ -1,6 +1,6 @@
 {
   "name": "anki-audio-extractor",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "Extract audio from Anki cards",
   "main": "src/main.js",
   "engines": {
@@ -20,6 +20,7 @@
   "license": "MIT",
   "devDependencies": {
     "@electron-forge/cli": "^7.8.1",
+    "@electron-forge/maker-dmg": "^7.8.1",
     "@electron-forge/maker-squirrel": "^7.8.1",
     "@electron-forge/maker-zip": "^7.8.1",
     "@electron-forge/plugin-auto-unpack-natives": "^7.8.1",

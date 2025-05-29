@@ -4,6 +4,7 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 module.exports = {
   packagerConfig: {
     asar: true,
+    icon: './assets/icon',
   },
   rebuildConfig: {},
   makers: [
@@ -13,12 +14,20 @@ module.exports = {
         name: 'anki_audio_extractor',
         authors: 'Sathira Williams',
         description: 'Extract audio from Anki cards',
-        noMsi: true
+        noMsi: true,
+        setupIcon: './assets/icon.ico'
       },
     },
     {
       name: '@electron-forge/maker-zip',
       platforms: ['darwin', 'win32'],
+    },
+    {
+      name: '@electron-forge/maker-dmg',
+      config: {
+        icon: './assets/icon.icns',
+        format: 'ULFO'
+      }
     },
     {
       name: '@electron-forge/maker-deb',
