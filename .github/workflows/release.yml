@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
   release:
     name: Release
@@ -35,4 +38,4 @@ jobs:
       - name: Publish
         run: npm run publish
         env:
-          GITHUB_TOKEN: ${{ secrets.github_token }} 
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }} 
