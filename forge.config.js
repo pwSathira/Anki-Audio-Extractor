@@ -41,4 +41,16 @@ module.exports = {
       [FuseV1Options.OnlyLoadAppFromAsar]: true,
     }),
   ],
+  publishers: [
+    {
+      name: '@electron-forge/publisher-github',
+      config: {
+        repository: {
+          owner: 'pwSathira',         // <-- Replace with your GitHub username/org
+          name: 'Anki-Audio-Extractor', // <-- Replace with your repo name
+        },
+        draft: false, 
+      },
+    },
+  ],
 };
